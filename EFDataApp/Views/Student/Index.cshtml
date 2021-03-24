@@ -1,0 +1,62 @@
+﻿@model EFDataApp.Models.Student
+@{
+    ViewBag.Title = "Student";
+}
+<head>
+<style>
+    .bg-1 {
+        background-color: #1abc9c; /* Green */
+        color: #ffffff;
+    }
+
+    .bg-2 {
+        background-color: #474e5d; /* Dark Blue */
+        color: #ffffff;
+    }
+
+    .bg-3 {
+        background-color: #fff; /* White */
+        color: #555555;
+    }
+    img {
+        
+        opacity: 1;
+        
+    }
+
+        img:hover {
+           
+            filter: contrast(200%) brightness(150%);
+        }
+</style>
+</head>
+<body >
+   
+    <div class="container-fluid bg-1 text-center">
+        <h3>Cine sint eu</h3>
+        <div class="bg-image hover-overlay">
+            <img src="/img/pic.jpg" class="w-75" />
+           
+        </div>
+        
+        <h3> @Model.LastName   @Model.FirstName</h3>
+        <h3>Sint student</h3>
+
+    </div>
+
+    <div class="container-fluid bg-2 text-center">
+        <h3>Despre mine?</h3>
+        <p>>@Model.About</p>
+    </div>
+
+    <div class="container-fluid bg-3 text-center">
+        <h3>Contactele mele?</h3>
+        <p> Email : @Model.Email</p>
+        <p> PhoneNumber : @Model.Telefon</p>
+    </div>
+    
+</body>
+
+
+
+

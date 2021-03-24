@@ -1,0 +1,14 @@
+﻿@model EFDataApp.Models.Note
+@{
+    ViewBag.Title = "Modificarea nota student";
+}
+<form asp-action="Change" asp-controller="curs" asp-route-id="@Model.StudentId">
+    <div class="form-group">
+        <label asp-for="Nota" class="control-label">Introdu nota</label>
+        <input type="text" asp-for="Nota" class="form-control" />
+    </div>
+  
+    <div class="form-group">
+        <input type="submit" value="Save" class="btn btn-default" />
+    </div>
+</form>

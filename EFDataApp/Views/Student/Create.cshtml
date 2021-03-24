@@ -1,0 +1,21 @@
+﻿@model EFDataApp.Models.Student
+@{
+    ViewBag.Title = "Adaugarea studentului";
+}
+<form asp-action="create" asp-controller="student">
+    <div class="form-group">
+        <label asp-for="FirstName" class="control-label">Prenume</label>
+        <input type="text" asp-for="FirstName" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="LastName" class="control-label">Nume</label>
+        <input type="text" asp-for="LastName" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="Age" class="control-label">Virsta</label>
+        <input type="number" asp-for="Age" class="form-control" />
+    </div>
+    <div class="form-group">
+        <input type="submit" value="Trimite" class="btn btn-default" />
+    </div>
+</form>

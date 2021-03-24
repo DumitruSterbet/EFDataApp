@@ -1,0 +1,23 @@
+﻿
+@model List<EFDataApp.Models.Student>
+@{
+    ViewBag.Title = "Lista de studenti inregistrati la curs";
+}
+<table class="table">
+    <p>Toti studentii</p>
+    @foreach (var item in Model)
+    {
+<tr>
+    <td>@item.FirstName</td>
+    <td>@item.LastName</td>
+
+    <td>
+        <a asp-action="Change" asp-controller="curs" asp-route-id="@item.Id">Modifica Nota</a> |
+    </td>
+    <td>
+        <a asp-action="Delete" asp-controller="curs" asp-route-id="@item.Id">Sterge studentul</a> |
+    </td>
+</tr>
+    }
+
+</table>

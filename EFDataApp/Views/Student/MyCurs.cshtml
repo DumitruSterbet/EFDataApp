@@ -1,0 +1,47 @@
+﻿@model IEnumerable<EFDataApp.JoinModels.NotaCurs>
+@{
+    ViewBag.Title = "Student";
+}
+
+<head>
+    <style>
+        .bg-1 {
+            background-color: #1abc9c; /* Green */
+            color: #ffffff;
+        }
+
+        .bg-2 {
+            background-color: #474e5d; /* Dark Blue */
+            color: #ffffff;
+        }
+
+        .bg-3 {
+            background-color: #fff; /* White */
+            color: #555555;
+        }
+        p,h1{color:white}
+    </style>
+</head>
+<body>
+    <p><h1 style="text-align:center">Disciplinele mele si reusita la ele</h1></p>
+    @foreach (var item in Model)
+    {
+
+
+        <h3>
+            <div class="container-fluid bg-1 text-center">
+                @item.Curs
+            </div>
+            <div class="container-fluid bg-3 text-center">
+                @item.Nota
+            </div>
+        </h3>
+
+    }
+
+    <h2><p>Media mea : @ViewBag.Media</p></h2>
+</body>
+
+
+
+   

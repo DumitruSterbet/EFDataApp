@@ -1,0 +1,14 @@
+﻿@model EFDataApp.Models.Student
+@{
+    ViewBag.Title = "Despre student";
+}
+<h2>Studentul  @Model.FirstName   @Model.LastName </h2>
+<div>
+    <dl class="dl-horizontal">
+        <dt>Id</dt>
+        <dd>@Model.Id</dd>
+
+        <dt>Virsta</dt>
+        <dd>@Model.Age</dd>
+    </dl>
+</div>
