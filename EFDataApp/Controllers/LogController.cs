@@ -103,8 +103,8 @@ namespace EFDataApp.Controllers
                 if (user != null)
                 {
                     await Authenticate(ad.Login); // аутентификация
-                    StudentId.ID = (user.StudentId - 1);
-                    return RedirectToAction("Index", "Student", new { @id = user.StudentId-1 });
+                    StudentId.ID = user.StudentId ;
+                    return RedirectToAction("Index", "Student", new { @id = user.StudentId });
                 }
 
             }

@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using EFDataApp.Models; // пространство имен моделей и контекста данных
 using EFDataApp.ViewModels;
 using System.Collections.Generic;
+using EFDataApp.JoinModels;
 
 namespace EFDataApp.Controllers
 {
@@ -34,10 +35,28 @@ namespace EFDataApp.Controllers
         public async Task<IActionResult> Index(int id)
         {
             await transform();
-            CoursID = id;
+            CoursID = id + 1;
 
             return View(obj.Cursuri[id]);
         }
+
+        // Notele studentilor la curs
+        public async Task<IActionResult> NoteStudent()
+        {
+            await transform();
+            ViewModel A = new ViewModel();
+            A.Notes = db.Notes.Where(u => u.CursId == CoursID).ToList();
+            List<StudentNota> B = new List<StudentNota>();
+            B = A.Notes.Join(db.Students,
+                u => u.StudentId,
+                p => p.Id,
+                (u, p) => new StudentNota
+                { FirstName = p.FirstName, LastName = p.LastName, Nota = u.Nota }
+                ).ToList();
+
+            return View(B);
+        }
+
         // Adaugarea studentului la curs
         public async Task<IActionResult> Add(int id)
         {
@@ -53,7 +72,6 @@ namespace EFDataApp.Controllers
         public async Task<IActionResult> StudentList()
         {
             await transform();
-            ViewBag.Object = CoursID;
             ViewModel A = new ViewModel();
             A.Notes = obj.Notes.Where(u=>u.CursId==CoursID).ToList();
             A.Students = A.Notes.Join(obj.Students,
@@ -69,6 +87,9 @@ namespace EFDataApp.Controllers
                     LastName = p.LastName,
                     Telefon = p.Telefon
                 }).ToList();
+            Curs p = obj.Cursuri.FirstOrDefault(u => u.Id == CoursID);
+            ViewBag.CName = p.Name;
+            ViewBag.Curs = CoursID;
             return View(A.Students);
         }
 

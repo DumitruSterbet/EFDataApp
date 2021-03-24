@@ -1,8 +1,6 @@
-﻿
-
-@model List<EFDataApp.Models.Student>
+﻿@model List<EFDataApp.JoinModels.StudentNota>
 @{
-    ViewBag.Title = "Lista de studenti disponibili";
+    ViewBag.Title = "Notele studentilor inregistrati la curs";
 }
 <head>
     <style>
@@ -18,28 +16,24 @@
         background-color: rgb(40,40,40);text-align:center;opacity:0.9;
 ">
 
-    <h1 style="color:antiquewhite">Lista de studenti diponibili pentru daugat</h1>
+    <h1 style="color:antiquewhite">Reusita studentilor de la curs</h1>
     <table class="table table-striped table-dark">
         <thead>
             <tr>
 
                 <th scope="col">First</th>
                 <th scope="col">Last</th>
-                <th scope="col">Adauga</th>
-                
+                <th scope="col">Nota</th>
+
             </tr>
         </thead>
         @foreach (var item in Model)
         {
-            <tr>
-                <td>@item.FirstName</td>
-                <td>@item.LastName</td>
-
-                <td>
-                    <a asp-action="Add" asp-controller="curs" asp-route-id="@item.Id">Adauga studentul</a> 
-                </td>
-                
-            </tr>
+    <tr>
+        <td>@item.FirstName</td>
+        <td>@item.LastName</td>
+        <td>@item.Nota</td>
+    </tr>
         }
 
     </table>

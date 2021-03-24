@@ -16,8 +16,8 @@ namespace EFDataApp.Controllers
     public class StudentController : Controller
     {
         public ViewModel obj = new ViewModel();
-
-        public int IdStud;
+        // Id studentului de pe pagina personala
+        public static int IdStud = 0;
         public ApplicationContext db;
         public StudentController(ApplicationContext context)
         {
@@ -34,13 +34,19 @@ namespace EFDataApp.Controllers
             obj.Notes = await (db.Notes.ToListAsync());
             return obj;
         }
+
+        //Pagina de baza a studentului
         public async Task<IActionResult> Index(int id)
-        {
+        {   
             await transform();
-            return View(obj.Students[id]);
+            IdStud = id;
+            Student A = new Student();
+            A = obj.Students.FirstOrDefault(u => u.Id == IdStud);
+            
+            return View(A);
         }
       
-
+        //Notele studentului la toate cursurile prezente
         public async Task<IActionResult> MyCurs(int id)
         {
             await transform();
@@ -51,10 +57,13 @@ namespace EFDataApp.Controllers
              p => p.CursId, // свойство-селектор объекта из первого набора
              t => t.Id, // свойство-селектор объекта из второго набора
              (p, t) => new NotaCurs{  Nota = p.Nota, Curs = t.Name });
-            ViewBag.Media = result.Average(u => u.Nota);
+            //ViewBag.Media = result.Average(u => u.Nota);
+            ViewBag.Media = SelectedObj.Notes.Average(u => u.Nota);
+            ViewBag.name = id;
             return View(result);
         }
-
+         
+        // Creeaza studentul
         public IActionResult Create()
         {
             return View();
@@ -67,14 +76,14 @@ namespace EFDataApp.Controllers
             return RedirectToAction("Index");
         }
 
-        
+        // Delogare
         public async Task<IActionResult> LogOut()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return RedirectToAction("Index", "Log");
             
         }
-
+        // Datele despre student
         public async Task<IActionResult> Details(int? id)
         {
             if (id != null)
@@ -85,6 +94,7 @@ namespace EFDataApp.Controllers
             }
             return NotFound();
         }
+        // Modifica datele despre student
         public async Task<IActionResult> Edit(int? id)
         {
             if (id != null)
@@ -102,6 +112,8 @@ namespace EFDataApp.Controllers
             await db.SaveChangesAsync();
             return RedirectToAction("Index");
         }
+
+        // Sterge studentul
         [HttpGet]
         [ActionName("Delete")]
         public async Task<IActionResult> ConfirmDelete(int? id)
