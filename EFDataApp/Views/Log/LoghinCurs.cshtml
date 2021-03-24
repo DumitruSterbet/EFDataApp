@@ -1,0 +1,21 @@
+﻿@model EFDataApp.Models.LogCurs
+@{
+    ViewBag.Title = "Autentificare ca manager";
+}
+<form asp-action="LoghinCurs" asp-controller="Log">
+    <div class="form-group">
+        <label asp-for="Login" class="control-label">Login</label>
+        <input type="text" asp-for="Login" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="Password" class="control-label">Parola</label>
+        <input type="text" asp-for="Password" class="form-control" />
+    </div>
+   
+    <div class="form-group">
+        <input type="submit" value="Trimite" class="btn btn-warning" />
+    </div>
+</form>
+<h1>Exemplu de date valide</h1>
+<h2>Login : @Model.Login</h2>
+<h2>Parola : @Model.Password</h2>
