@@ -1,0 +1,24 @@
+﻿@model EFDataApp.Models.LogStudent
+    @{
+    ViewBag.Title="Loginul si parola a studentului";
+    }
+<form asp-action="RegLogStudent" asp-controller="Admin">
+      
+        <div class="form-group">
+            
+            <label asp-for="Login" class="control-label">Login</label>
+            <input type="text" asp-for="Login" class="form-control" />
+            <span asp-validation-for="Login"></span>
+        </div>
+        <div class="form-group">
+            <input type="hidden" asp-for="StudentId" class="form-control" value="@ViewBag.ar" />
+            <label asp-for="Password" class="control-label">Parola</label>
+            <input type="text" asp-for="Password" class="form-control" />
+            <span asp-validation-for="Password"></span>
+        </div>
+
+
+    <div class="form-group">
+        <input type="submit" value="Trimite" class="btn btn-default" />
+    </div>
+</form>

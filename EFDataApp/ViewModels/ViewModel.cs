@@ -13,5 +13,6 @@ namespace EFDataApp.ViewModels
         public List<Note>Notes { get; set; }
         public List<LogStudent>LogStudents { get; set; }
         public List<LogCurs> LogCurs { get; set; }
+        public List<LogAmin> LogAmins { get; set; }
     }
 }

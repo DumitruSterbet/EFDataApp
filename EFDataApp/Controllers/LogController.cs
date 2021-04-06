@@ -32,6 +32,7 @@ namespace EFDataApp.Controllers
         {
             obj.LogCurs = await (db.LogCurs.ToListAsync());
             obj.LogStudents = await (db.LogStudents.ToListAsync());
+            obj.LogAmins = await (db.LogAmins.ToListAsync());
             return obj;
         }
         private async Task Authenticate(string userName)
@@ -54,7 +55,7 @@ namespace EFDataApp.Controllers
         }
 
 
-        // Pagina de logare ca admin
+        // Pagina de logare ca profesor
         [HttpGet]
         public async Task<IActionResult> LoghinCurs()
         {
@@ -62,6 +63,31 @@ namespace EFDataApp.Controllers
             return View(obj.LogCurs[2]);
         }
 
+        // Pagina de logare ca admin
+        [HttpGet]
+        public async Task<IActionResult> LoghinAdmin()
+        {
+            await transform();
+            return View(obj.LogAmins[0]);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> LoghinAdmin(LogAmin ad)
+        {
+            if (ModelState.IsValid)
+            {
+                LogAmin user = await db.LogAmins.FirstOrDefaultAsync(u => u.Login == ad.Login && u.Password == ad.Password);
+                if (user != null)
+                {
+                    await Authenticate(ad.Login);
+
+                    return RedirectToAction("Index", "Admin");
+                }
+
+            }
+            return RedirectToAction("Index", "Log");
+
+        }
         // Pagina de logare ca student
         [HttpGet]
         public async Task<IActionResult> LoghinStudent()

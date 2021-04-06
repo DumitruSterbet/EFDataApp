@@ -13,6 +13,7 @@ namespace EFDataApp.Models
         public DbSet<Note> Notes { get; set; }
         public DbSet<LogCurs> LogCurs { get; set; }
         public DbSet<LogStudent> LogStudents { get; set; }
+        public DbSet<LogAmin>LogAmins { get; set; }
         public ApplicationContext(DbContextOptions<ApplicationContext> options)
             : base(options)
         {

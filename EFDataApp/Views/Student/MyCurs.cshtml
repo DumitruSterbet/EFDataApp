@@ -3,45 +3,44 @@
     ViewBag.Title = "Student";
 }
 
+
 <head>
     <style>
-        .bg-1 {
-            background-color: #1abc9c; /* Green */
-            color: #ffffff;
+        a {
+            color: darkred;
+            text-decoration-line: none;
+            opacity: 1;
         }
-
-        .bg-2 {
-            background-color: #474e5d; /* Dark Blue */
-            color: #ffffff;
-        }
-
-        .bg-3 {
-            background-color: #fff; /* White */
-            color: #555555;
-        }
-        p,h1{color:white}
     </style>
 </head>
-<body>
-    <p><h1 style="text-align:center">Disciplinele mele si reusita la ele a @ViewBag.name</h1></p>
-    @foreach (var item in Model)
-    {
+<div style="        border: 10px solid black;
+        border-radius: inherit 10px;
+        background-color: rgb(40,40,40);text-align:center;opacity:0.9;
+">
+
+    <h1 style="color:antiquewhite">Reusita mea la cursuri</h1>
+    <table class="table table-striped table-dark">
+        <thead>
+            <tr>
+
+                
+                <th scope="col">Curs</th>
+                <th scope="col">Nota</th>
+
+            </tr>
+        </thead>
+        @foreach (var item in Model)
+        {
+            <tr>
+              
+                <td>@item.Curs</td>
+                <td>@item.Nota</td>
+            </tr>
+        }
+
+    </table>
+</div>
+<h2 style="color:white">Media mea : @ViewBag.Media</h2>
 
 
-        <h3>
-            <div class="container-fluid bg-1 text-center">
-                @item.Curs
-            </div>
-            <div class="container-fluid bg-3 text-center">
-                @item.Nota
-            </div>
-        </h3>
 
-    }
-
-    <h2><p>Media mea : @ViewBag.Media</p></h2>
-</body>
-
-
-
-   
