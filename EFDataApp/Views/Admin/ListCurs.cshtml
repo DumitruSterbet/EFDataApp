@@ -1,0 +1,24 @@
+﻿@model List<Curs>
+@{
+    ViewData["Title"] = "Lista cursurilor";
+}
+<div class="container p-3 m-3" style="background-color:rgba(255,255,255,0.3);border-radius:20px">
+    <div class="text-center text-danger"><h1>Lista cursurilor</h1></div>
+    <div class="container text-white">
+        <div class="row justify-content-center">
+            @{ foreach (var el in Model)
+                {
+
+                    <div class="col-lg-3 m-3 p-3 rounded bg-dark text-center">
+                        <p>@el.Name</p>
+                        <p>@el.Profesor</p>
+                        <p>@el.About</p>
+                        <a class="btn-danger m-1 rounded p-2 text-white"
+                           asp-action="DelCurs" asp-controller="Admin" asp-route-id="@el.Id">Sterge curs</a>
+                    </div>
+
+                }
+            }
+        </div>
+    </div>
+</div>

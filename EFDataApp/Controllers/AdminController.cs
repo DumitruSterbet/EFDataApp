@@ -1,4 +1,5 @@
 ﻿using EFDataApp.Models;
+using EFDataApp.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -23,7 +24,43 @@ namespace EFDataApp.Controllers
         {
             return View();
         }
-  
+        public IActionResult ListStudents()
+        {
+            ViewModel obj = new ViewModel();
+            obj.Students = db.Students.ToList();
+            return View(obj.Students);
+        }
+        public IActionResult DelStudent(int id)
+        {
+            Student obj = new Student();
+            LogStudent obv = new LogStudent();
+            obj = db.Students.FirstOrDefault(u => u.Id == id);
+            obv = db.LogStudents.FirstOrDefault(u => u.StudentId == id);
+            db.Students.Remove(obj);
+            db.LogStudents.Remove(obv);
+            db.SaveChangesAsync();
+            return RedirectToAction("ListStudents");
+        }
+        public IActionResult ListCurs()
+        {
+            ViewModel obj = new ViewModel();
+            obj.Cursuri = db.Cursuri.ToList();
+            return View(obj.Cursuri);
+        }
+        public IActionResult DelCurs(int id)
+        {
+            Curs obj = new Curs();
+            LogCurs obv = new LogCurs();
+            obj = db.Cursuri.FirstOrDefault(u=>u.Id==id);
+            obv = db.LogCurs.FirstOrDefault(u => u.CursId == id);
+            db.Cursuri.Remove(obj);
+            db.LogCurs.Remove(obv);
+            db.SaveChangesAsync();
+            return RedirectToAction("ListCurs");
+        }
+
+
+
 
         // Inregistrare Student
         public IActionResult RegStudent()

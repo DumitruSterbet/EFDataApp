@@ -12,7 +12,7 @@ namespace EFDataApp.Controllers
     public class CursController : Controller
     {
         public ViewModel obj = new ViewModel();
-        public static int CoursID = 0;
+        public static int CoursID;
 
         public ApplicationContext db;
         public CursController(ApplicationContext context)
@@ -35,9 +35,9 @@ namespace EFDataApp.Controllers
         public async Task<IActionResult> Index(int id)
         {
             await transform();
-            CoursID = id + 1;
+            CoursID = id;
 
-            return View(obj.Cursuri[id]);
+            return View(obj.Cursuri.FirstOrDefault(u=>u.Id==id));
         }
 
         // Notele studentilor la curs

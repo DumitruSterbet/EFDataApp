@@ -1,0 +1,25 @@
+﻿@model List<Student>
+@{
+    ViewData["Title"] = "Lista studentilor";
+}
+<div class="container p-3 m-3" style="background-color:rgba(255,255,255,0.3);border-radius:20px">
+    <div class="text-center text-danger"><h1>Lista Studentilor</h1></div>
+    <div class="container text-white">
+        <div class="row justify-content-center">
+            @{ foreach (var el in Model)
+                {
+
+                    <div class="col-lg-3 m-3 p-3 rounded bg-dark text-center">
+                        <p>@el.FirstName</p>
+                        <p>@el.LastName</p>
+                        <p>@el.About</p>
+                        <p>@el.Email</p>
+                        <a class="btn-danger m-1 rounded p-2 text-white"
+                           asp-action="DelStudent" asp-controller="Admin" asp-route-id="@el.Id">Sterge student</a>
+                    </div>
+
+                }
+            }
+        </div>
+    </div>
+</div>
