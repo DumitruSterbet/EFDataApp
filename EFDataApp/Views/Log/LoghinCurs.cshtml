@@ -1,21 +1,39 @@
 ﻿@model EFDataApp.Models.LogCurs
 @{
-    ViewBag.Title = "Autentificare ca manager";
+    ViewBag.Title = "Autentificare ca profesor";
 }
-<form asp-action="LoghinCurs" asp-controller="Log">
-    <div class="form-group">
-        <label asp-for="Login" class="control-label">Login</label>
-        <input type="text" asp-for="Login" class="form-control" />
+
+<div class="row justify-content-center m-5">
+    <div class="col-2"></div>
+    <div class=" container col-5">
+        <div class="login-form-1 mt-5 rounded p-4" style="background-color: rgb(150, 150, 150, 0.4)">
+            <h1 class="text-white">Logheaza-te</h1>
+            <form id="login-form" class="text-left" novalidate="novalidate" asp-action="LoghinCurs" asp-controller="log">
+                <div class="main-login-form">
+                    <div class="login-group">
+
+                        <div class="form-group">
+                            <label asp-for="Login" class="control-label">Login</label>
+                            <input type="text" asp-for="Login" class="form-control" />
+                        </div>
+                        <div class="m-2 text-center"><h6 class="text-danger">@ViewBag.LoginErr</h6></div>
+                        <div class="form-group">
+                            <label asp-for="Password" class="control-label">Paswword</label>
+                            <input type="password" asp-for="Password" class="font-weight-bold form-control font-weight-bold" />
+                        </div>
+                        <div class="m-2 text-center"><h6 class="text-danger">@ViewBag.PasswordErr</h6></div>
+
+                        <button type="submit" class="login-button"><i class="fa fa-chevron-right"></i></button>
+                        <div class="m-2 text-center text-danger bg-white rounded">
+                            <h6 class="">@ViewBag.ErrExist</h6>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="m-2 text-center text-danger bg-white rounded">
+
+                </div>
+            </form>
+        </div>
     </div>
-    <div class="form-group">
-        <label asp-for="Password" class="control-label">Parola</label>
-        <input type="text" asp-for="Password" class="form-control" />
-    </div>
-   
-    <div class="form-group">
-        <input type="submit" value="Trimite" class="btn btn-warning" />
-    </div>
-</form>
-<h1>Exemplu de date valide</h1>
-<h2>Login : @Model.Login</h2>
-<h2>Parola : @Model.Password</h2>
+  </div>

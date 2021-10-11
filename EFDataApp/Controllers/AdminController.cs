@@ -1,6 +1,9 @@
 ﻿using EFDataApp.Models;
+using EFDataApp.Validations;
+using EFDataApp.Validations.Students;
 using EFDataApp.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -38,7 +41,7 @@ namespace EFDataApp.Controllers
             obv = db.LogStudents.FirstOrDefault(u => u.StudentId == id);
             db.Students.Remove(obj);
             db.LogStudents.Remove(obv);
-            db.SaveChangesAsync();
+            db.SaveChanges();
             return RedirectToAction("ListStudents");
         }
         public IActionResult ListCurs()
@@ -55,7 +58,7 @@ namespace EFDataApp.Controllers
             obv = db.LogCurs.FirstOrDefault(u => u.CursId == id);
             db.Cursuri.Remove(obj);
             db.LogCurs.Remove(obv);
-            db.SaveChangesAsync();
+            db.SaveChanges();
             return RedirectToAction("ListCurs");
         }
 
@@ -69,18 +72,22 @@ namespace EFDataApp.Controllers
         }
         [HttpPost]
         public IActionResult RegStudent(Student student)
-        { 
-            if (ModelState.IsValid) { 
-            db.Students.Add(student);
-            db.SaveChanges();
-                StudId = student.Id;
-                return RedirectToAction("RegLogStudent");
+        {
+            if (!nullValid(student))
+            {
+                if (!lenghtValid(student))
+                {
+                    db.Students.Add(student);
+                    db.SaveChanges();
+                    StudId = student.Id;
+                    return RedirectToAction("RegLogStudent");
+                }
             }
 
-            return RedirectToAction("Index");
+            return View();
         }
 
-        // Inregistrare signout student
+        // Inregistrare log student
         public IActionResult RegLogStudent()
         {
             ViewBag.ar = StudId;
@@ -89,20 +96,28 @@ namespace EFDataApp.Controllers
         [HttpPost]
         public IActionResult RegLogStudent(LogStudent stud)
         {
-            if (ModelState.IsValid)
-            {
-               
-                db.LogStudents.Add(stud);
-                db.SaveChanges();
-                return RedirectToAction("RegisterSuccesStud");
+            ViewBag.ar = StudId;
+            if (!nullValid(stud))
+                if (!lenghtValid(stud))
+                {
+                    LogStudent user =  db.LogStudents.FirstOrDefault(u => u.Login == stud.Login && u.Password == stud.Password);
+                    if (user == null)
+                    {
+                       
+                        db.LogStudents.Add(stud);
+                        db.SaveChanges();
+                        return RedirectToAction("RegisterSuccesStud", new { id = stud.StudentId });
+                    }
+                    ViewBag.ErrExist = "Asa combinatie login-parola exista, incearca alta";
+
             }
 
-            return RedirectToAction("Index");
+            return View();
         }
-        public IActionResult RegisterSuccesStud()
+        public IActionResult RegisterSuccesStud(int id)
         {
-            Student A = new Student();
-            A = db.Students.FirstOrDefault(u => u.Id == StudId);
+            LogStudent A = new LogStudent();
+            A = db.LogStudents.FirstOrDefault(u => u.StudentId == id);
             return View(A);
         }
 
@@ -112,20 +127,28 @@ namespace EFDataApp.Controllers
             return View();
         }
         [HttpPost]
+        //Inregistrarea cursului
         public IActionResult RegCurs(Curs curs)
         {
-            if (ModelState.IsValid)
-            {
-                db.Cursuri.Add(curs);
-               
-                db.SaveChanges();
-                CursID = curs.Id;
-                return RedirectToAction("RegLogCurs");
+            if (!nullValid(curs))
+                if (!lenghtValid(curs))
+
+                {
+                    Curs user = db.Cursuri.FirstOrDefault(u => u.Name == curs.Name);
+                    if (user == null)
+                    {
+                        db.Cursuri.Add(curs);
+
+                        db.SaveChanges();
+                        CursID = curs.Id;
+                        return RedirectToAction("RegLogCurs");
+                    }
+                    ViewBag.ErrExist = "Asa curs exista, adauga altul";
             }
 
-            return RedirectToAction("Index");
+            return View();
         }
-        // Inregistrare signout student
+        
         public IActionResult RegLogCurs()
         {
             ViewBag.ID = CursID;
@@ -134,22 +157,219 @@ namespace EFDataApp.Controllers
         [HttpPost]
         public IActionResult RegLogCurs(LogCurs stud)
         {
-            if (ModelState.IsValid)
+            ViewBag.ID = CursID;
+            if (!nullValid(stud))
+                if(!lenghtValid(stud))
             {
-
-                db.LogCurs.Add(stud);
-                db.SaveChanges();
-                return RedirectToAction("RegisterSuccesCurs");
+                    LogCurs user = db.LogCurs.FirstOrDefault(u => u.Login == stud.Login && u.Password == stud.Password);                   
+                        if (user == null)
+                    {
+                        db.LogCurs.Add(stud);
+                        db.SaveChanges();
+                        return RedirectToAction("RegisterSuccesCurs",new { id = stud.CursId });
+                    }
+                    ViewBag.ErrExist = "Asa combinatie login-parola exista, adauga alta";
             }
 
-            return RedirectToAction("Index");
+            return View();
         }
-        public IActionResult RegisterSuccesCurs()
+        public IActionResult RegisterSuccesCurs(int id)
         {
-            Curs A = new Curs();
-            A = db.Cursuri.FirstOrDefault(u => u.Id == CursID);
+            LogCurs A = new LogCurs();
+            A = db.LogCurs.FirstOrDefault(u => u.CursId == id);
             return View(A);
         }
+        public bool nullValid(Object obj2)
+        {
+            NullErr nullErr = new NullErr();
+            string k = "";
+            if (obj2 is LogStudent)
+            {
+                k = nullErr.nullValidation(obj2);
+                if (k.Contains("1"))
+                {
+                    ViewBag.LoginErr = nullErr.errMess;
+                }
+                if (k.Contains("2"))
+                {
+                    ViewBag.PasswordErr = nullErr.errMess;
+                }
 
+            }
+            if (obj2 is LogCurs)
+            {
+                k = nullErr.nullValidation(obj2);
+                if (k.Contains("1"))
+                {
+                    ViewBag.LoginErr = nullErr.errMess;
+                }
+                if (k.Contains("2"))
+                {
+                    ViewBag.PasswordErr = nullErr.errMess;
+                }
+
+            }
+            if (obj2 is LogAmin)
+            {
+                k = nullErr.nullValidation(obj2);
+                if (k.Contains("1"))
+                {
+                    ViewBag.LoginErr = nullErr.errMess;
+                }
+                if (k.Contains("2"))
+                {
+                    ViewBag.PasswordErr = nullErr.errMess;
+                }
+
+            }
+            if (obj2 is Student)
+            {
+                k = nullErr.nullValidation(obj2);
+                if (k.Contains("1"))
+                {
+                    ViewBag.FirstNameErr = nullErr.errMess;
+                }
+                if (k.Contains("2"))
+                {
+                    ViewBag.LastNameErr = nullErr.errMess;
+                }
+                if (k.Contains("3"))
+                {
+                    ViewBag.TelefonErr = nullErr.errMess;
+                }
+                if (k.Contains("4"))
+                {
+                    ViewBag.AgeErr = nullErr.errMess;
+                }
+                if (k.Contains("5"))
+                {
+                    ViewBag.AboutErr = nullErr.errMess;
+                }
+                if (k.Contains("6"))
+                {
+                    ViewBag.EmailErr = nullErr.errMess;
+                }
+
+            }
+            if (obj2 is Curs)
+            {
+                k = nullErr.nullValidation(obj2);
+                if (k.Contains("1"))
+                {
+                    ViewBag.NameErr = nullErr.errMess;
+                }
+                if (k.Contains("2"))
+                {
+                    ViewBag.ProfessorErr = nullErr.errMess;
+                }
+                if (k.Contains("3"))
+                {
+                    ViewBag.AboutErr = nullErr.errMess;
+                }
+               
+
+            }
+            if (k == "")
+                return false;
+            return true;
+        }
+        public bool lenghtValid(Object obj2)
+        {
+            LenghtErr nullErr = new LenghtErr();
+            string k = "";
+            if (obj2 is LogStudent)
+            {
+                k = nullErr.nullValidation(obj2);
+                if (k.Contains("1"))
+                {
+                    ViewBag.LoginErr = nullErr.errMess;
+                }
+                if (k.Contains("2"))
+                {
+                    ViewBag.PasswordErr = nullErr.errMess;
+                }
+
+            }
+            if (obj2 is LogCurs)
+            {
+                k = nullErr.nullValidation(obj2);
+                if (k.Contains("1"))
+                {
+                    ViewBag.LoginErr = nullErr.errMess;
+                }
+                if (k.Contains("2"))
+                {
+                    ViewBag.PasswordErr = nullErr.errMess;
+                }
+
+            }
+            if (obj2 is LogAmin)
+            {
+                k = nullErr.nullValidation(obj2);
+                if (k.Contains("1"))
+                {
+                    ViewBag.LoginErr = nullErr.errMess;
+                }
+                if (k.Contains("2"))
+                {
+                    ViewBag.PasswordErr = nullErr.errMess;
+                }
+
+            }
+            if (obj2 is Student)
+            {
+                k = nullErr.nullValidation(obj2);
+                if (k.Contains("1"))
+                {
+                    ViewBag.FirstNameErr = nullErr.errMess;
+                }
+                if (k.Contains("2"))
+                {
+                    ViewBag.LastNameErr = nullErr.errMess;
+                }
+                if (k.Contains("3"))
+                {
+                    ViewBag.TelefonErr = nullErr.errMess;
+                }
+                if (k.Contains("4"))
+                {
+                    ViewBag.AgeErr = nullErr.errMessAge;
+                }
+                if (k.Contains("5"))
+                {
+                    ViewBag.AboutErr = nullErr.errMess;
+                }
+                if (k.Contains("6"))
+                {
+                    ViewBag.EmailErr = nullErr.errMess;
+                }
+                if (k.Contains("7"))
+                {
+                    ViewBag.EmailErr = nullErr.errMessEm;
+                }
+
+            }
+            if (obj2 is Curs)
+            {
+                k = nullErr.nullValidation(obj2);
+                if (k.Contains("1"))
+                {
+                    ViewBag.NameErr = nullErr.errMess;
+                }
+                if (k.Contains("2"))
+                {
+                    ViewBag.ProfessorErr = nullErr.errMess;
+                }
+                if (k.Contains("3"))
+                {
+                    ViewBag.AboutErr = nullErr.errMess;
+                }
+
+
+            }
+            if (k == "")
+                return false;
+            return true;
+        }
     }
 }

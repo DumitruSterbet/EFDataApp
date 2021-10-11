@@ -5,9 +5,23 @@
 
 <div class="" style="text-align:center">
     <form>
-        <h1>Cine esti?</h1>
-        <h2><a style="text-decoration:dashed" asp-action="LoghinCurs">Professor</a></h2>
-        <h2><a style="text-decoration:dashed" asp-action="LoghinStudent">Student</a></h2>
-        <h2><a style="text-decoration:dashed" asp-action="LoghinAdmin">Manager</a></h2>
+        <h1 class="m-2 text-white mb-4">Cine esti?</h1>
+        <div class="row" style="background-color:rgb(255, 255, 255,0.3)">
+            <div class="col lg-4 m-5  justify-content-center">
+                    <img src="~/links/professor.png" height="150" width="150" />
+                    <h4><a class="text-white"style="text-decoration:dashed" asp-action="LoghinCurs">Professor</a></h4></div>
+               
+            <div class="col lg-4 m-5 border-left border-right border-white " >
+                <img src="~/links/student.png" height="150" width="150" />
+                <h4><a class="text-danger" style="text-decoration:dashed" asp-action="LoghinStudent">Student</a></h4>
+
+            </div>
+            <div class="col lg-4 m-5 " >
+                <img src="~/links/administrator.png" height="150" width="150" />
+                <h4><a class="text-light"style="text-decoration:dashed" asp-action="LoghinAdmin">Manager</a></h4>
+
+            </div>
+            
+        </div>
     </form>
 </div>

@@ -6,6 +6,7 @@ using EFDataApp.Models; // пространство имен моделей и �
 using EFDataApp.ViewModels;
 using System.Collections.Generic;
 using EFDataApp.JoinModels;
+using EFDataApp.Validations;
 
 namespace EFDataApp.Controllers
 {
@@ -15,6 +16,7 @@ namespace EFDataApp.Controllers
         public static int CoursID;
 
         public ApplicationContext db;
+        public static int studentId = 0;
         public CursController(ApplicationContext context)
         {
             db = context;
@@ -139,6 +141,7 @@ namespace EFDataApp.Controllers
         // Modificarea notei la student
         public async Task<IActionResult> Change(int? id)
         {
+            studentId = (int)id;
             if (id != null)
             {
                 Note user = await db.Notes.FirstOrDefaultAsync(p => p.StudentId == id);
@@ -149,21 +152,25 @@ namespace EFDataApp.Controllers
         }
         [HttpPost]
         public async Task<IActionResult> Change(Note user)
-        {
-            await transform();
-            int p = user.Nota;
-            string login = HttpContext.User.Identity.Name;
-            Curs Login = obj.Cursuri.FirstOrDefault(u => u.Name == login);
-            int loginId = Login.Id;
+        {  if (validNote(user.Nota))
+            {
+                await transform();
+                int p = user.Nota;
+                
+                Curs Login = obj.Cursuri.FirstOrDefault(u => u.Id == CoursID);
+                int loginId = Login.Id;
 
 
-            Note user1 = await db.Notes.FirstOrDefaultAsync(p => p.StudentId == user.Id && p.CursId==loginId );
-            user = user1;
-            
-            user.Nota = p;
-            db.Notes.Update(user);
-            await db.SaveChangesAsync();
-            return RedirectToAction("StudentList");
+                Note user1 = await db.Notes.FirstOrDefaultAsync(p => p.StudentId == user.Id && p.CursId == loginId);
+                user = user1;
+
+                user.Nota = p;
+                db.Notes.Update(user);
+                await db.SaveChangesAsync();
+                return RedirectToAction("StudentList");
+            }
+            Note user2 = await db.Notes.FirstOrDefaultAsync(p => p.StudentId == studentId);
+            return View(user2);
         }
 
         //Stergerea studentului de la curs
@@ -180,6 +187,21 @@ namespace EFDataApp.Controllers
                 }
             }
             return NotFound();
+        }
+
+        public bool validNote(int nota)
+        {
+            NoteErr err = new NoteErr();
+            string k = "";
+            k = err.noteValid(nota);
+            if (k.Contains("1"))
+            {
+                ViewBag.NoteErr = err.errNote;
+            }
+            if(k=="")
+            return true;
+
+            return false;
         }
      
     }

@@ -13,6 +13,7 @@ using EFDataApp.Models; // пространство имен моделей и �
 using EFDataApp.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using EFDataApp.Components;
+using EFDataApp.Validations.Students;
 
 namespace EFDataApp.Controllers
 {
@@ -60,7 +61,7 @@ namespace EFDataApp.Controllers
         public async Task<IActionResult> LoghinCurs()
         {
             await transform();
-            return View(obj.LogCurs[2]);
+            return View();
         }
 
         // Pagina de logare ca admin
@@ -68,13 +69,13 @@ namespace EFDataApp.Controllers
         public async Task<IActionResult> LoghinAdmin()
         {
             await transform();
-            return View(obj.LogAmins[0]);
+            return View();
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> LoghinAdmin(LogAmin ad)
         {
-            if (ModelState.IsValid)
+            if (!nullValid(ad))
             {
                 LogAmin user = await db.LogAmins.FirstOrDefaultAsync(u => u.Login == ad.Login && u.Password == ad.Password);
                 if (user != null)
@@ -83,9 +84,9 @@ namespace EFDataApp.Controllers
 
                     return RedirectToAction("Index", "Admin");
                 }
-
+                ViewBag.ErrExist = "Asa utilizator nu exista";
             }
-            return RedirectToAction("Index", "Log");
+            return View();
 
         }
         // Pagina de logare ca student
@@ -93,7 +94,7 @@ namespace EFDataApp.Controllers
         public async Task<IActionResult> LoghinStudent()
         {
             await transform();
-            return View(obj.LogStudents[2]);
+            return View();
         }
 
 
@@ -102,7 +103,7 @@ namespace EFDataApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> LoghinCurs(LogCurs ad)
         {
-            if (ModelState.IsValid)
+            if (!nullValid(ad))
             {
                 LogCurs user = await db.LogCurs.FirstOrDefaultAsync(u => u.Login == ad.Login && u.Password == ad.Password);
                 if (user != null)
@@ -112,9 +113,9 @@ namespace EFDataApp.Controllers
 
                     return RedirectToAction("Index", "Curs", new { @id = user.CursId});
                 }
-
+                ViewBag.ErrExist = "Asa utilizator nu exista";
             }
-            return RedirectToAction("Index", "Log");
+            return View();
 
         }
 
@@ -123,20 +124,67 @@ namespace EFDataApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> LoghinStudent(LogStudent ad)
         {
-            if (ModelState.IsValid)
+            if (!nullValid(ad))
             {
                 LogStudent user = await db.LogStudents.FirstOrDefaultAsync(u => u.Login == ad.Login && u.Password == ad.Password);
                 if (user != null)
                 {
                     await Authenticate(ad.Login); // аутентификация
-                    StudentId.ID = user.StudentId ;
+                    StudentId.ID = user.StudentId;
                     return RedirectToAction("Index", "Student", new { @id = user.StudentId });
                 }
 
-            }
-            return RedirectToAction("Index", "Log");
+                ViewBag.ErrExist = "Asa utilizator nu exista";            
+            }return View();
 
         }
+        public bool nullValid(Object obj2)
+        { NullErr nullErr = new NullErr();
+            string k = "";
+            if (obj2 is LogStudent)
+            {
+                k = nullErr.nullValidation(obj2);
+                if (k.Contains("1"))
+                {
+                    ViewBag.LoginErr = nullErr.errMess;
+                }
+                if (k.Contains("2"))
+                {
+                    ViewBag.PasswordErr = nullErr.errMess;
+                }
+                
+            }
+            if (obj2 is LogCurs)
+            {
+                k = nullErr.nullValidation(obj2);
+                if (k.Contains("1"))
+                {
+                    ViewBag.LoginErr = nullErr.errMess;
+                }
+                if (k.Contains("2"))
+                {
+                    ViewBag.PasswordErr = nullErr.errMess;
+                }
+
+            }
+            if (obj2 is LogAmin)
+            {
+                k = nullErr.nullValidation(obj2);
+                if (k.Contains("1"))
+                {
+                    ViewBag.LoginErr = nullErr.errMess;
+                }
+                if (k.Contains("2"))
+                {
+                    ViewBag.PasswordErr = nullErr.errMess;
+                }
+
+            }
+            if (k=="")
+                return false;
+            return true;
+        }
+       
 
     }
 }

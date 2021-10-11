@@ -3,11 +3,12 @@
     ViewBag.Title = "Modificarea nota student";
 }
 
-<form asp-action="Change" asp-controller="curs" asp-route-id="@Model.StudentId">
+<form class="bg-white" asp-action="Change" asp-controller="curs" asp-route-id="@Model.StudentId">
     <div class="form-group">
         <label asp-for="Nota" class="control-label">Introdu nota</label>
-        <input type="text" asp-for="Nota" class="form-control" />
+        <input type="number" asp-for="Nota" class="form-control" />
     </div>
+    <h6>@ViewBag.NoteErr</h6>
   
     <div class="form-group">
         <input type="submit" value="Save" class="btn btn-default" />
